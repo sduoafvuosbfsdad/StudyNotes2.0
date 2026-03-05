@@ -11,13 +11,13 @@ npm run dev
 
 ## Docker Compose (Production)
 
-Build and run the production container:
+Build and run the production container (Node runtime, no nginx):
 
 ```bash
 docker compose up --build -d
 ```
 
-Then open `http://localhost:8080`.
+Then open `http://localhost:8080`. The container builds the app and serves it with `vite preview` under `NODE_ENV=production`.
 
 To stop and remove containers:
 
