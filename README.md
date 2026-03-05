@@ -9,15 +9,15 @@ npm install
 npm run dev
 ```
 
-## Docker Compose
+## Docker Compose (Production)
 
-Run the app in Docker for local development:
+Build and run the production container:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
-Then open `http://localhost:5173`. On first run, dependencies are installed automatically inside the container.
+Then open `http://localhost:8080`.
 
 To stop and remove containers:
 
