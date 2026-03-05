@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { useLanguage } from '@/components/language-context';
 import { getAllTopics, type RegisteredNote } from '@/notes/registry';
 
 interface IndexedNote {
@@ -28,15 +29,21 @@ function scoreMatch(note: IndexedNote, query: string): number {
 }
 
 export function useSearchIndex() {
+  const { tNote } = useLanguage();
+
   const index = useMemo<IndexedNote[]>(
     () =>
-      getAllTopics().map((note) => ({
-        note,
-        title: note.title.toLowerCase(),
-        description: (note.description ?? '').toLowerCase(),
-        subject: note.subject.toLowerCase()
-      })),
-    []
+      getAllTopics().map((note) => {
+        const translated = tNote(note);
+
+        return {
+          note,
+          title: translated.title.toLowerCase(),
+          description: (translated.description ?? '').toLowerCase(),
+          subject: translated.subject.toLowerCase()
+        };
+      }),
+    [tNote]
   );
 
   return useCallback(
