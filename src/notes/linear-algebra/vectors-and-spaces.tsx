@@ -4,6 +4,7 @@ import { SubSection } from '@/components/notes/SubSection';
 import { Math } from '@/components/notes/Math';
 import { Text } from '@/components/notes/Text';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 import { meta } from './vectors-and-spaces.meta';
 
 export { meta };
@@ -28,46 +29,42 @@ function VectorAdditionDemo() {
         <div className="space-y-2 text-sm">
           <label className="block">
             a_x ({ax})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-5}
               max={6}
               value={ax}
-              onChange={(event) => setAx(Number(event.target.value))}
+              onValueChange={setAx}
             />
           </label>
           <label className="block">
             a_y ({ay})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-5}
               max={6}
               value={ay}
-              onChange={(event) => setAy(Number(event.target.value))}
+              onValueChange={setAy}
             />
           </label>
           <label className="block">
             b_x ({bx})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-5}
               max={6}
               value={bx}
-              onChange={(event) => setBx(Number(event.target.value))}
+              onValueChange={setBx}
             />
           </label>
           <label className="block">
             b_y ({by})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-5}
               max={6}
               value={by}
-              onChange={(event) => setBy(Number(event.target.value))}
+              onValueChange={setBy}
             />
           </label>
         </div>

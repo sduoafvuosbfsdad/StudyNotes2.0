@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Section } from '@/components/notes/Section';
 import { SubSection } from '@/components/notes/SubSection';
 import { Math } from '@/components/notes/Math';
+import { Slider } from '@/components/ui/slider';
 import { meta } from './matrix-transformations.meta';
 
 export { meta };
@@ -46,50 +47,46 @@ function MatrixDemo() {
         <div className="space-y-2 text-sm">
           <label className="block">
             a ({a.toFixed(1)})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-2}
               max={2}
               step={0.1}
               value={a}
-              onChange={(event) => setA(Number(event.target.value))}
+              onValueChange={setA}
             />
           </label>
           <label className="block">
             b ({b.toFixed(1)})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-2}
               max={2}
               step={0.1}
               value={b}
-              onChange={(event) => setB(Number(event.target.value))}
+              onValueChange={setB}
             />
           </label>
           <label className="block">
             c ({c.toFixed(1)})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-2}
               max={2}
               step={0.1}
               value={c}
-              onChange={(event) => setC(Number(event.target.value))}
+              onValueChange={setC}
             />
           </label>
           <label className="block">
             d ({d.toFixed(1)})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={-2}
               max={2}
               step={0.1}
               value={d}
-              onChange={(event) => setD(Number(event.target.value))}
+              onValueChange={setD}
             />
           </label>
           <p className="pt-1 text-xs text-muted-foreground">det(A) = {determinant.toFixed(2)}</p>

@@ -3,6 +3,7 @@ import { Section } from '@/components/notes/Section';
 import { SubSection } from '@/components/notes/SubSection';
 import { Math as KaTeXMath } from '@/components/notes/Math';
 import { Text } from '@/components/notes/Text';
+import { Slider } from '@/components/ui/slider';
 import { meta } from './limits-and-continuity.meta';
 
 export { meta };
@@ -37,26 +38,24 @@ function EpsilonDeltaDemo() {
         <div className="space-y-2 text-sm">
           <label className="block">
             epsilon ({epsilon.toFixed(2)})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={0.05}
               max={1.5}
               step={0.05}
               value={epsilon}
-              onChange={(event) => setEpsilon(Number(event.target.value))}
+              onValueChange={setEpsilon}
             />
           </label>
           <label className="block">
             delta ({delta.toFixed(2)})
-            <input
-              className="mt-1 w-full"
-              type="range"
+            <Slider
+              className="mt-1"
               min={0.05}
               max={1.5}
               step={0.05}
               value={delta}
-              onChange={(event) => setDelta(Number(event.target.value))}
+              onValueChange={setDelta}
             />
           </label>
           <p className="text-xs text-muted-foreground">Target point: (2, 4)</p>

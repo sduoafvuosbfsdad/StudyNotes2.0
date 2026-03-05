@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Section } from '@/components/notes/Section';
 import { SubSection } from '@/components/notes/SubSection';
 import { Math } from '@/components/notes/Math';
+import { Slider } from '@/components/ui/slider';
 import { meta } from './derivatives.meta';
 
 export { meta };
@@ -51,14 +52,13 @@ function DerivativeDemo() {
 
       <label className="mb-4 block text-sm">
         x at tangent point ({x0.toFixed(2)})
-        <input
-          className="mt-1 w-full"
-          type="range"
+        <Slider
+          className="mt-1"
           min={-2}
           max={2}
           step={0.05}
           value={x0}
-          onChange={(event) => setX0(Number(event.target.value))}
+          onValueChange={setX0}
         />
       </label>
 
