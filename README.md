@@ -19,7 +19,7 @@ Build and run the production container (Node runtime, no nginx):
 docker compose up --build -d web
 ```
 
-Then open `http://localhost:3007`. The production image serves the built app with `vite preview` under `NODE_ENV=production`.
+Then open `http://localhost:3007`. The production image serves the built app from `dist` using a lightweight Node static file server under `NODE_ENV=production`.
 
 ### Development profile
 
