@@ -57,16 +57,43 @@ export function TOCProvider({ children }: PropsWithChildren) {
     setActiveId((current) => (current === id ? null : current));
   }, []);
 
+  const orderedEntries = useMemo(() => {
+    if (typeof document === 'undefined') {
+      return entries;
+    }
+
+    return [...entries].sort((a, b) => {
+      const aNode = document.getElementById(a.id);
+      const bNode = document.getElementById(b.id);
+
+      if (!aNode || !bNode || aNode === bNode) {
+        return 0;
+      }
+
+      const position = aNode.compareDocumentPosition(bNode);
+
+      if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+        return -1;
+      }
+
+      if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+        return 1;
+      }
+
+      return 0;
+    });
+  }, [entries]);
+
   const value = useMemo<TOCContextValue>(
     () => ({
-      entries,
+      entries: orderedEntries,
       registerEntry,
       unregisterEntry,
       activeId,
       setActiveId,
       createId
     }),
-    [activeId, createId, entries, registerEntry, unregisterEntry]
+    [activeId, createId, orderedEntries, registerEntry, unregisterEntry]
   );
 
   return <TOCContext.Provider value={value}>{children}</TOCContext.Provider>;

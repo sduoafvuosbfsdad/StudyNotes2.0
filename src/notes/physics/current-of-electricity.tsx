@@ -61,7 +61,7 @@ function SvgInsertPlaceholder({ id, label, suggestedPath }: SvgInsertPlaceholder
 export default function CurrentOfElectricity() {
   return (
     <>
-      <Section title="14.0 Basic Knowledge" className="space-y-2">
+      <Section title="14.0 basic knowledge" className="space-y-2">
         <p>Electricity takes the path with the least resistance.</p>
       </Section>
 
@@ -74,7 +74,7 @@ export default function CurrentOfElectricity() {
           <p>t is time (s)</p>
         </NoteCard>
 
-        <SubSection title="14.1.1 Conventional Current Flow & Electron Flow" className="space-y-2">
+        <SubSection title="14.1.1 Coneventional current flow & electron flow" className="space-y-2">
           <SvgInsertPlaceholder
             id="conventional-current-flow-circuit"
             label="Conventional current and electron flow loop"
@@ -86,7 +86,7 @@ export default function CurrentOfElectricity() {
           </NoteCard>
         </SubSection>
 
-        <SubSection title="14.1.2 Measuring Current" className="space-y-2">
+        <SubSection title="14.1.2 Measuring currents" className="space-y-2">
           <div className="not-prose grid gap-4 md:grid-cols-2">
             <InstrumentImage
               src={ammeterImage}
@@ -114,20 +114,20 @@ export default function CurrentOfElectricity() {
         </SubSection>
       </Section>
 
-      <Section title="14.2 Circuit Diagrams" className="space-y-2">
+      <Section title="14.2 Current diagrams" className="space-y-2">
         <InstrumentImage src={circuitDiagramsImage} alt="Reference table of standard circuit symbols" />
         <NoteCard>
           <p>YOU MUST CONSTRUCT WITH STRAIGHT LINES.</p>
         </NoteCard>
       </Section>
 
-      <Section title="14.4 Electromotive Force VS Potential Difference" className="space-y-2">
+      <Section title="14.3 Electromotive force vs potential difference" className="space-y-2">
         <NoteCard title="TLDR">
           <p>Electromotive force - Entire circuit</p>
           <p>Potential Difference - Across electric components</p>
         </NoteCard>
 
-        <SubSection title="14.4.1 Electromotive Force" className="space-y-2">
+        <SubSection title="14.3.1 Electromotive force" className="space-y-2">
           <NoteCard>
             <p>Electromotive force is work done per unit charge by a source in driving charges across a circuit.</p>
             <Math block>{String.raw`E = \frac{W}{Q}`}</Math>
@@ -137,7 +137,7 @@ export default function CurrentOfElectricity() {
           </NoteCard>
         </SubSection>
 
-        <SubSection title="14.4.2 Potential Difference" className="space-y-2">
+        <SubSection title="14.3.2 Potential difference" className="space-y-2">
           <NoteCard>
             <p>Potential difference is work done per unit charge in driving charges through a component.</p>
             <Math block>{String.raw`V = \frac{W}{Q}`}</Math>
@@ -147,7 +147,7 @@ export default function CurrentOfElectricity() {
           </NoteCard>
         </SubSection>
 
-        <SubSection title="14.4.3 Measuring Voltage" className="space-y-2">
+        <SubSection title="14.3.3 Measuring Voltage" className="space-y-2">
           <div className="not-prose grid gap-4 md:grid-cols-2">
             <InstrumentImage
               src={voltmeterImage}
