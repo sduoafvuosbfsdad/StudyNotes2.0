@@ -32,15 +32,20 @@ const server = createServer((req, res) => {
   const ext = extname(targetPath);
   const contentType = mimeTypes[ext] ?? 'application/octet-stream';
 
+  const readStream = createReadStream(targetPath);
+  readStream.on('error', () => {
+    if (!res.headersSent) {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+    }
+    res.end('Failed to read file');
+  });
+
   res.writeHead(200, {
     'Content-Type': contentType,
     'Cache-Control': targetPath.endsWith('index.html') ? 'no-cache' : 'public, max-age=31536000, immutable',
   });
 
-  createReadStream(targetPath).pipe(res).on('error', () => {
-    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('Failed to read file');
-  });
+  readStream.pipe(res);
 });
 
 server.listen(port, host, () => {
