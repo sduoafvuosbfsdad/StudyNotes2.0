@@ -9,17 +9,29 @@ npm install
 npm run dev
 ```
 
-## Docker Compose (Production)
+## Docker Compose
+
+### Production
 
 Build and run the production container (Node runtime, no nginx):
 
 ```bash
-docker compose up --build -d
+docker compose up --build -d web
 ```
 
-Then open `http://localhost:8080`. The container builds the app and serves it with `vite preview` under `NODE_ENV=production`.
+Then open `http://localhost:3007`. The production image serves the built app with `vite preview` under `NODE_ENV=production`.
 
-Dependencies are installed during image build with `npm ci` (from `package-lock.json`), and this setup does **not** use a persistent `node_modules` volume. After lockfile changes, re-run `docker compose up --build -d` to ensure dependencies are refreshed.
+### Development profile
+
+Run the hot-reload development server in Docker:
+
+```bash
+docker compose --profile dev up --build web-dev
+```
+
+Then open `http://localhost:3007`. This profile mounts the repo into the container and runs `vite dev` under `NODE_ENV=development`.
+
+Dependencies are installed during image build with `npm ci` (from `package-lock.json`). After lockfile changes, re-run the compose command with `--build` to refresh dependencies.
 
 To stop and remove containers:
 
