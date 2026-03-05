@@ -19,7 +19,7 @@ Build and run the production container (Node runtime, no nginx):
 docker compose up --build -d web
 ```
 
-Then open `http://localhost:8080`. The production image serves the built app with `vite preview` under `NODE_ENV=production`.
+Then open `http://localhost:3007`. The production image serves the built app with `vite preview` under `NODE_ENV=production`.
 
 ### Development profile
 
@@ -29,7 +29,7 @@ Run the hot-reload development server in Docker:
 docker compose --profile dev up --build web-dev
 ```
 
-Then open `http://localhost:5173`. This profile mounts the repo into the container and runs `vite dev` under `NODE_ENV=development`.
+Then open `http://localhost:3007`. This profile mounts the repo into the container and runs `vite dev` under `NODE_ENV=development`.
 
 Dependencies are installed during image build with `npm ci` (from `package-lock.json`). After lockfile changes, re-run the compose command with `--build` to refresh dependencies.
 
