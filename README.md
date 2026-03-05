@@ -19,6 +19,8 @@ docker compose up --build -d
 
 Then open `http://localhost:8080`. The container builds the app and serves it with `vite preview` under `NODE_ENV=production`.
 
+Dependencies are installed during image build with `npm ci` (from `package-lock.json`), and this setup does **not** use a persistent `node_modules` volume. After lockfile changes, re-run `docker compose up --build -d` to ensure dependencies are refreshed.
+
 To stop and remove containers:
 
 ```bash
