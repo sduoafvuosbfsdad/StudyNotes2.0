@@ -3,6 +3,15 @@ import type { RegisteredNote } from '@/notes/registry';
 export type Locale = 'en' | 'zh-CN';
 
 export const DEFAULT_LOCALE: Locale = 'en';
+export const SUPPORTED_LOCALES: readonly Locale[] = ['en', 'zh-CN'];
+
+export function isLocale(value: unknown): value is Locale {
+  return typeof value === 'string' && SUPPORTED_LOCALES.includes(value as Locale);
+}
+
+export function normalizeLocale(value: unknown): Locale {
+  return isLocale(value) ? value : DEFAULT_LOCALE;
+}
 
 type UiTranslationKey =
   | 'appName'

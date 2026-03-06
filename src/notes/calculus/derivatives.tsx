@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
+import { useLanguage } from '@/components/language-context';
+import { Math } from '@/components/notes/Math';
 import { Section } from '@/components/notes/Section';
 import { SubSection } from '@/components/notes/SubSection';
-import { Math } from '@/components/notes/Math';
 import { Slider } from '@/components/ui/slider';
 import { meta } from './derivatives.meta';
 
@@ -20,6 +21,7 @@ function toCanvas(x: number, y: number) {
 
 function DerivativeDemo() {
   const [x0, setX0] = useState(1.2);
+  const { locale } = useLanguage();
 
   const slope = 2 * x0;
   const y0 = f(x0);
@@ -46,20 +48,15 @@ function DerivativeDemo() {
     };
   }, [slope, x0, y0]);
 
+  const isZh = locale === 'zh-CN';
+
   return (
     <div className="not-prose rounded-xl border border-border bg-card/70 p-4">
-      <p className="mb-3 text-sm font-medium">Tangent-line explorer for f(x) = x^2</p>
+      <p className="mb-3 text-sm font-medium">{isZh ? 'f(x)=x² 的切线探索器' : 'Tangent-line explorer for f(x) = x^2'}</p>
 
       <label className="mb-4 block text-sm">
-        x at tangent point ({x0.toFixed(2)})
-        <Slider
-          className="mt-1"
-          min={-2}
-          max={2}
-          step={0.05}
-          value={x0}
-          onValueChange={setX0}
-        />
+        {isZh ? `切点处的 x（${x0.toFixed(2)}）` : `x at tangent point (${x0.toFixed(2)})`}
+        <Slider className="mt-1" min={-2} max={2} step={0.05} value={x0} onValueChange={setX0} />
       </label>
 
       <svg viewBox="0 0 240 240" className="h-60 w-full rounded-lg border border-border bg-background">
@@ -79,37 +76,40 @@ function DerivativeDemo() {
       </svg>
 
       <p className="mt-3 text-sm text-muted-foreground">
-        f({x0.toFixed(2)}) = {y0.toFixed(2)}, slope = f'({x0.toFixed(2)}) = {slope.toFixed(2)}
+        f({x0.toFixed(2)}) = {y0.toFixed(2)}，{isZh ? '斜率' : 'slope'} = f'({x0.toFixed(2)}) = {slope.toFixed(2)}
       </p>
     </div>
   );
 }
 
 export default function Derivatives() {
+  const { locale } = useLanguage();
+  const isZh = locale === 'zh-CN';
+
   return (
     <>
-      <Section title="Definition">
-        <p>The derivative is the instantaneous rate of change, defined as a limit of secant slopes.</p>
+      <Section title={isZh ? '定义' : 'Definition'}>
+        <p>{isZh ? '导数表示瞬时变化率，本质上是割线斜率在极限下的结果。' : 'The derivative is the instantaneous rate of change, defined as a limit of secant slopes.'}</p>
         <Math block>{String.raw`f'(x) = \lim_{h\to0}\frac{f(x+h)-f(x)}{h}`}</Math>
       </Section>
 
-      <Section title="Rules">
-        <SubSection title="Power Rule">
+      <Section title={isZh ? '求导法则' : 'Rules'}>
+        <SubSection title={isZh ? '幂函数求导法则' : 'Power Rule'}>
           <Math block>{String.raw`\frac{d}{dx}(x^n)=nx^{n-1}`}</Math>
         </SubSection>
-        <SubSection title="Product and Quotient">
+        <SubSection title={isZh ? '乘法与商法则' : 'Product and Quotient'}>
           <Math block>{String.raw`(fg)' = f'g + fg'`}</Math>
           <Math block>{String.raw`\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}`}</Math>
         </SubSection>
       </Section>
 
-      <Section title="Chain Rule">
-        <p>The derivative of a composition multiplies outer and inner derivatives.</p>
+      <Section title={isZh ? '链式法则' : 'Chain Rule'}>
+        <p>{isZh ? '复合函数求导等于外层导数乘以内层导数。' : 'The derivative of a composition multiplies outer and inner derivatives.'}</p>
         <Math block>{String.raw`\frac{d}{dx} f(g(x)) = f'(g(x))\cdot g'(x)`}</Math>
       </Section>
 
-      <Section title="Applications">
-        <p>Tangent lines, optimization, and local approximation all rely on derivatives.</p>
+      <Section title={isZh ? '应用' : 'Applications'}>
+        <p>{isZh ? '切线、最优化和局部近似都依赖导数。' : 'Tangent lines, optimization, and local approximation all rely on derivatives.'}</p>
         <DerivativeDemo />
       </Section>
     </>
