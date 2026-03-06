@@ -1,8 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState, type PropsWithChildren } from 'react';
+import { lazy, Suspense, useEffect, useState, type PropsWithChildren } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TOCProvider } from '@/components/notes/TOCContext';
-import { CommandPalette } from '@/components/search/CommandPalette';
 import { MainContent } from '@/components/layout/MainContent';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { SkipToContent } from '@/components/layout/SkipToContent';
@@ -11,6 +10,11 @@ import { TopBar } from '@/components/layout/TopBar';
 import { fadeIn } from '@/lib/animations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useReducedMotionPreference } from '@/hooks/useReducedMotion';
+
+const LazyCommandPalette = lazy(async () => {
+  const module = await import('@/components/search/CommandPalette');
+  return { default: module.CommandPalette };
+});
 
 export function Layout({ children }: PropsWithChildren) {
   const location = useLocation();
@@ -22,7 +26,15 @@ export function Layout({ children }: PropsWithChildren) {
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
       const isModifier = event.ctrlKey || event.metaKey;
-      if (isModifier && event.key.toLowerCase() === 'b') {
+      const key = event.key.toLowerCase();
+
+      if (isModifier && key === 'k') {
+        event.preventDefault();
+        setSearchOpen((current) => !current);
+        return;
+      }
+
+      if (isModifier && key === 'b') {
         event.preventDefault();
         setCollapsed((current) => !current);
       }
@@ -77,7 +89,11 @@ export function Layout({ children }: PropsWithChildren) {
         </div>
       </div>
 
-      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
+      {searchOpen ? (
+        <Suspense fallback={null}>
+          <LazyCommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
+        </Suspense>
+      ) : null}
     </div>
   );
 }
