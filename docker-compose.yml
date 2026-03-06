@@ -9,6 +9,8 @@ services:
     environment:
       NODE_ENV: production
     restart: unless-stopped
+    networks:
+      - frontend
 
   web-dev:
     profiles: ["dev"]
@@ -23,6 +25,8 @@ services:
     volumes:
       - ./:/app
       - /app/node_modules
+    networks:
+      - frontend
 
   api:
     profiles: ["backend"]
@@ -44,10 +48,15 @@ services:
       POSTGRES_PORT: "5432"
       REDIS_URL: redis://redis:6379/0
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./backend:/app/backend
+    networks:
+      - frontend
+      - backend
 
   worker:
     profiles: ["backend"]
@@ -66,10 +75,14 @@ services:
       POSTGRES_PORT: "5432"
       REDIS_URL: redis://redis:6379/0
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./backend:/app/backend
+    networks:
+      - backend
 
   db:
     profiles: ["backend"]
@@ -82,12 +95,31 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend
 
   redis:
     profiles: ["backend"]
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
 
 volumes:
   pgdata:
+
+networks:
+  frontend:
+  backend:
