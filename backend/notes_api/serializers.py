@@ -23,14 +23,18 @@ class HtmlSnippetSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_by', 'created_at', 'updated_at']
 
     def validate_html(self, value: str) -> str:
-        raw_is_trusted = self.initial_data.get('is_trusted', False)
+        raw_is_trusted = self.initial_data.get('is_trusted', None)
+
+        if raw_is_trusted is None and self.instance is not None:
+            raw_is_trusted = self.instance.is_trusted
+
         is_trusted = raw_is_trusted if isinstance(raw_is_trusted, bool) else str(raw_is_trusted).lower() in {'1', 'true', 'yes'}
 
         # For untrusted snippets, strip script and dangerous attributes to reduce XSS risk.
         if not is_trusted:
             allowed_tags = bleach.sanitizer.ALLOWED_TAGS.union({'div', 'span', 'p', 'img', 'section', 'article'})
             allowed_attributes = {
-                '*': ['class', 'id', 'style', 'title'],
+                '*': ['class', 'id', 'title'],
                 'a': ['href', 'title', 'target', 'rel'],
                 'img': ['src', 'alt', 'title', 'width', 'height'],
             }
