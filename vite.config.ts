@@ -20,8 +20,12 @@ export default defineConfig({
             return 'katex';
           }
 
-          if (id.includes('cmdk') || id.includes('@radix-ui/react-dialog')) {
-            return 'search-ui';
+          if (id.includes('cmdk')) {
+            return 'cmdk';
+          }
+
+          if (id.includes('@radix-ui/react-dialog')) {
+            return 'dialog';
           }
         }
       }
