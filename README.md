@@ -9,14 +9,6 @@ npm install
 npm run dev
 ```
 
-## One-command Setup
-
-Run the setup script to install Docker Engine/CLI and Docker Compose plugin:
-
-```bash
-bash setup.sh
-```
-
 ## Docker Compose
 
 ### Production
@@ -38,33 +30,6 @@ docker compose --profile dev up --build web-dev
 ```
 
 Then open `http://localhost:3007`. This profile mounts the repo into the container and runs `vite dev` under `NODE_ENV=development`.
-
-### Backend profile (Django + PostgreSQL + Redis)
-
-Start the backend stack:
-
-```bash
-docker compose --profile backend up --build api worker db redis
-```
-
-Run migrations and create an initial admin user:
-
-```bash
-docker compose --profile backend exec api python manage.py migrate
-docker compose --profile backend exec api python manage.py createsuperuser
-```
-
-Backend API is exposed at `http://localhost:8000`.
-
-- Health check: `GET /api/health/`
-- JWT login (username/password): `POST /api/auth/token/`
-- JWT refresh: `POST /api/auth/token/refresh/`
-- Protected resources:
-  - `/api/documents/`
-  - `/api/document-versions/`
-  - `/api/html-snippets/`
-
-`html-snippets` supports storing custom HTML experiment snippets; write operations are admin-only by default.
 
 Dependencies are installed during image build with `npm ci` (from `package-lock.json`). After lockfile changes, re-run the compose command with `--build` to refresh dependencies.
 
