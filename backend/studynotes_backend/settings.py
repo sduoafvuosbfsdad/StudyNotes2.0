@@ -50,16 +50,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'studynotes_backend.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'studynotes'),
-        'USER': os.getenv('POSTGRES_USER', 'studynotes'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'studynotes'),
-        'HOST': os.getenv('POSTGRES_HOST', 'db'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+if os.getenv('DJANGO_USE_SQLITE', 'false').lower() == 'true':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', 'studynotes'),
+            'USER': os.getenv('POSTGRES_USER', 'studynotes'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'studynotes'),
+            'HOST': os.getenv('POSTGRES_HOST', 'db'),
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
