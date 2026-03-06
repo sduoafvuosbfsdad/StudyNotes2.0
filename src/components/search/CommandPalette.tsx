@@ -41,23 +41,6 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const grouped = useMemo(() => groupBySubject(results, tNote), [results, tNote]);
 
   useEffect(() => {
-    const handleShortcut = (event: KeyboardEvent) => {
-      const isModifier = event.metaKey || event.ctrlKey;
-      const isCommandK = event.key.toLowerCase() === 'k';
-
-      if (!isModifier || !isCommandK) {
-        return;
-      }
-
-      event.preventDefault();
-      onOpenChange(!open);
-    };
-
-    window.addEventListener('keydown', handleShortcut);
-    return () => window.removeEventListener('keydown', handleShortcut);
-  }, [onOpenChange, open]);
-
-  useEffect(() => {
     if (!open) {
       setQuery('');
     }
