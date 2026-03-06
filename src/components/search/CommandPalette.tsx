@@ -9,6 +9,7 @@ import {
   CommandList,
   CommandShortcut
 } from '@/components/ui/command';
+import { useLanguage } from '@/components/language-context';
 import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useSearchIndex } from '@/hooks/useSearchIndex';
@@ -19,23 +20,25 @@ interface CommandPaletteProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function groupBySubject(notes: RegisteredNote[]): Map<string, RegisteredNote[]> {
+function groupBySubject(notes: RegisteredNote[], tNote: (note: RegisteredNote) => { subject: string }) {
   return notes.reduce((acc, note) => {
-    const existing = acc.get(note.subject) ?? [];
+    const subject = tNote(note).subject;
+    const existing = acc.get(subject) ?? [];
     existing.push(note);
-    acc.set(note.subject, existing);
+    acc.set(subject, existing);
     return acc;
   }, new Map<string, RegisteredNote[]>());
 }
 
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const navigate = useNavigate();
+  const { t, tNote } = useLanguage();
   const search = useSearchIndex();
   const [query, setQuery] = useState('');
   const debounced = useDebounce(query, 200);
 
   const results = useMemo(() => search(debounced).slice(0, 20), [debounced, search]);
-  const grouped = useMemo(() => groupBySubject(results), [results]);
+  const grouped = useMemo(() => groupBySubject(results, tNote), [results, tNote]);
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -62,37 +65,35 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <DialogTitle className="sr-only">Search notes</DialogTitle>
-      <DialogDescription className="sr-only">
-        Type a note name, subject, or description and press Enter to navigate.
-      </DialogDescription>
-      <CommandInput
-        value={query}
-        onValueChange={setQuery}
-        placeholder="Search by title, subject, or description..."
-      />
+      <DialogTitle className="sr-only">{t('searchNotes')}</DialogTitle>
+      <DialogDescription className="sr-only">{t('searchDialogDescription')}</DialogDescription>
+      <CommandInput value={query} onValueChange={setQuery} placeholder={t('searchPlaceholder')} />
       <CommandList>
-        <CommandEmpty>No matching notes.</CommandEmpty>
+        <CommandEmpty>{t('noMatchingNotes')}</CommandEmpty>
         {Array.from(grouped.entries()).map(([subject, notes]) => (
           <CommandGroup heading={subject} key={subject}>
-            {notes.map((note) => (
-              <CommandItem
-                key={`${note.subjectSlug}/${note.topicSlug}`}
-                value={`${note.subject} ${note.title} ${note.description ?? ''}`}
-                onSelect={() => {
-                  navigate(getNoteHref(note));
-                  onOpenChange(false);
-                }}
-              >
-                <div className="flex min-w-0 flex-col">
-                  <span className="truncate text-sm font-medium">{note.title}</span>
-                  {note.description ? (
-                    <span className="truncate text-xs text-muted-foreground">{note.description}</span>
-                  ) : null}
-                </div>
-                <CommandShortcut>{note.order}</CommandShortcut>
-              </CommandItem>
-            ))}
+            {notes.map((note) => {
+              const translated = tNote(note);
+
+              return (
+                <CommandItem
+                  key={`${note.subjectSlug}/${note.topicSlug}`}
+                  value={`${translated.subject} ${translated.title} ${translated.description ?? ''}`}
+                  onSelect={() => {
+                    navigate(getNoteHref(note));
+                    onOpenChange(false);
+                  }}
+                >
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate text-sm font-medium">{translated.title}</span>
+                    {translated.description ? (
+                      <span className="truncate text-xs text-muted-foreground">{translated.description}</span>
+                    ) : null}
+                  </div>
+                  <CommandShortcut>{note.order}</CommandShortcut>
+                </CommandItem>
+              );
+            })}
           </CommandGroup>
         ))}
       </CommandList>

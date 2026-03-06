@@ -3,6 +3,7 @@ import { Link2 } from 'lucide-react';
 import { useHashScroll } from '@/hooks/useHashScroll';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 import { useTOC } from '@/components/notes/TOCContext';
+import { useLanguage } from '@/components/language-context';
 import { cn } from '@/lib/utils';
 
 interface TOCRailProps {
@@ -11,10 +12,11 @@ interface TOCRailProps {
 
 function TOCList({ compact }: { compact: boolean }) {
   const { entries, activeId } = useTOC();
+  const { t } = useLanguage();
   const scrollToId = useHashScroll();
 
   if (!entries.length) {
-    return <p className="text-sm text-muted-foreground">No headings yet.</p>;
+    return <p className="text-sm text-muted-foreground">{t('noHeadingsYet')}</p>;
   }
 
   return (
@@ -47,6 +49,7 @@ function TOCList({ compact }: { compact: boolean }) {
 
 export function TOCRail({ mode }: TOCRailProps) {
   const { entries, setActiveId } = useTOC();
+  const { t } = useLanguage();
 
   const ids = useMemo(() => entries.map((entry) => entry.id), [entries]);
 
@@ -62,11 +65,9 @@ export function TOCRail({ mode }: TOCRailProps) {
 
     return (
       <details className="mb-6 rounded-xl border border-border bg-card/65 p-3 lg:hidden">
-        <summary className="cursor-pointer list-none text-sm font-medium text-foreground">
-          On this page
-        </summary>
+        <summary className="cursor-pointer list-none text-sm font-medium text-foreground">{t('onThisPage')}</summary>
         <div className="mt-2 border-t border-border pt-2">
-          <nav aria-label="Table of contents">
+          <nav aria-label={t('tableOfContents')}>
             <TOCList compact />
           </nav>
         </div>
@@ -77,8 +78,8 @@ export function TOCRail({ mode }: TOCRailProps) {
   return (
     <aside className="sticky top-20 hidden h-[calc(100vh-6.5rem)] w-64 shrink-0 self-start overflow-y-auto border-l border-border/70 pl-4 xl:block">
       <div className="space-y-3">
-        <h2 className="text-sm font-semibold text-foreground">On this page</h2>
-        <nav aria-label="Table of contents">
+        <h2 className="text-sm font-semibold text-foreground">{t('onThisPage')}</h2>
+        <nav aria-label={t('tableOfContents')}>
           <TOCList compact={false} />
         </nav>
       </div>
